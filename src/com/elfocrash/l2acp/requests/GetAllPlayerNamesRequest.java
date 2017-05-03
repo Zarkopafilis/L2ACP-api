@@ -30,10 +30,9 @@ public class GetAllPlayerNamesRequest extends L2ACPRequest {
 	
 	@Override
 	public L2ACPResponse getResponse() {
-		
 		ArrayList<String> players = Helpers.getAllPlayerNames();
 		
-		return new GetAllPlayerNamesResponse(200, localeService.getString("requests.ok"), players.toArray(new String[players.size()]));//"Success"
+		return new GetAllPlayerNamesResponse(200, localeService.getString("requests.ok"), players.toArray(new String[players.size()]));
 	}
 	
 	

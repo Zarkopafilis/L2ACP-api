@@ -32,7 +32,7 @@ import net.sf.l2j.gameserver.model.base.Sex;
  */
 public class ChangeSexRequest extends L2ACPRequest {
 	private int serviceId = 4;
-	private String Username;
+	private String username;
 	
 	@Override
 	public L2ACPResponse getResponse() {
@@ -47,11 +47,11 @@ public class ChangeSexRequest extends L2ACPRequest {
 		if(price < 0)
 			return new L2ACPResponse(500, localeService.getString("requests.disabled-service"));
 		
-		L2PcInstance player = World.getInstance().getPlayer(Username);
+		L2PcInstance player = World.getInstance().getPlayer(username);
 		if(player == null){
-			player = L2PcInstance.restore( Helpers.getPlayerIdByName(Username));					
+			player = L2PcInstance.restore( Helpers.getPlayerIdByName(username));
 		}
-		String accName = Helpers.getAccountName(Username);
+		String accName = Helpers.getAccountName(username);
 		int donatePoints = Helpers.getDonatePoints(accName);
 		
 		if(donatePoints < price){
@@ -76,6 +76,6 @@ public class ChangeSexRequest extends L2ACPRequest {
 	public void setContent(JsonObject content){
 		super.setContent(content);
 		
-		Username = content.get("Username").getAsString();
+		username = content.get("username").getAsString();
 	}
 }

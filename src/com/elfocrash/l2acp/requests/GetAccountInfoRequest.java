@@ -71,16 +71,16 @@ public class GetAccountInfoRequest extends L2ACPRequest
 			catch (SQLException e)
 			{
 				e.printStackTrace();
-				return new L2ACPResponse(500, localeService.getString("requests.account-info.error"));//"Unsuccessful retrieval"
+				return new L2ACPResponse(500, localeService.getString("requests.account-info.error"));
 			}
 			
-			return new GetAccountInfoResponse(200,"Success", chars.toArray(new String[chars.size()]), donatePoints, accessLevel);//"Successful retrieval"
+			return new GetAccountInfoResponse(200,"Success", chars.toArray(new String[chars.size()]), donatePoints, accessLevel);
 		}
 		catch (SQLException e)
 		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			return new L2ACPResponse(500, localeService.getString("requests.account-info.success"));//"Unsuccessful retrieval"
+			return new L2ACPResponse(500, localeService.getString("requests.account-info.success"));
 		}
 	}
 	

@@ -33,13 +33,13 @@ import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance;
  */
 public class GetPlayerInventoryRequest extends L2ACPRequest {
 
-	private String Username;
+	private String username;
 	
 	@Override
 	public L2ACPResponse getResponse() {
-		L2PcInstance player = World.getInstance().getPlayer(Username);
+		L2PcInstance player = World.getInstance().getPlayer(username);
 		if(player == null){
-			player = L2PcInstance.restore(Helpers.getPlayerIdByName(Username));					
+			player = L2PcInstance.restore(Helpers.getPlayerIdByName(username));
 		}
 		ArrayList<InventoryInfo> invInfo = player.getInventory().getItems().stream().map(item -> new InventoryInfo(item.getObjectId(), item.getItemId(), item.getCount(), item.isEquipped(), item.getEnchantLevel())).collect(Collectors.toCollection(ArrayList::new));
 		return new GetPlayerInventoryResponse(200, localeService.getString("requests.ok"), invInfo.toArray(new InventoryInfo[invInfo.size()]));
@@ -50,6 +50,6 @@ public class GetPlayerInventoryRequest extends L2ACPRequest {
 	public void setContent(JsonObject content){
 		super.setContent(content);
 		
-		Username = content.get("Username").getAsString();
+		username = content.get("username").getAsString();
 	}
 }

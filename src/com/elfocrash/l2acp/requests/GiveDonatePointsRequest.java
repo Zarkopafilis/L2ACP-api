@@ -25,15 +25,15 @@ import com.google.gson.JsonObject;
  */
 public class GiveDonatePointsRequest extends L2ACPRequest {
 
-    private String PlayerName;
-    private int Points;
+    private String playerName;
+    private int points;
     
 	@Override
 	public L2ACPResponse getResponse() {
 		
-		String accountName = Helpers.getAccountName(PlayerName);
+		String accountName = Helpers.getAccountName(playerName);
 		if(accountName != null && accountName.length() > 0){
-			Helpers.addDonatePoints(accountName, Points);
+			Helpers.addDonatePoints(accountName, points);
 			
 			return new L2ACPResponse(200, localeService.getString("requests.ok"));
 		}
@@ -45,7 +45,7 @@ public class GiveDonatePointsRequest extends L2ACPRequest {
 	public void setContent(JsonObject content){
 		super.setContent(content);
 		
-		PlayerName = content.get("PlayerName").getAsString();
-		Points = content.get("Points").getAsInt();
+		playerName = content.get("playerName").getAsString();
+		points = content.get("points").getAsInt();
 	}
 }

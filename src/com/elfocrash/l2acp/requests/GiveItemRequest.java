@@ -30,31 +30,29 @@ import net.sf.l2j.gameserver.model.item.instance.ItemInstance;
  */
 public class GiveItemRequest extends L2ACPRequest
 {
-	private String Username;
-	private int ItemId;
-	private int ItemCount;
-	private int Enchant;
+	private String username;
+	private int itemId, itemCount, enchant;
 
 	@Override
 	public L2ACPResponse getResponse()
 	{
 		
-		L2PcInstance player = World.getInstance().getPlayer(Username);
+		L2PcInstance player = World.getInstance().getPlayer(username);
 		if(player == null){
-			player = L2PcInstance.restore(Helpers.getPlayerIdByName(Username));					
+			player = L2PcInstance.restore(Helpers.getPlayerIdByName(username));
 		}
 		
-		if(Enchant > 0 && ItemCount > 1){
+		if(enchant > 0 && itemCount > 1){
 			return new L2ACPResponse(500, localeService.getString("requests.error"));
 		}
 		
-		if(Enchant > 0){
-			ItemInstance item = new ItemInstance(IdFactory.getInstance().getNextId(), ItemId);
+		if(enchant > 0){
+			ItemInstance item = new ItemInstance(IdFactory.getInstance().getNextId(), itemId);
 		
-			item.setEnchantLevel(Enchant);
+			item.setEnchantLevel(enchant);
 			player.addItem("Give item", item, player, true);
-		}else if(ItemCount > 0){
-			player.addItem("Give item", ItemId, ItemCount, player, true);
+		}else if(itemCount > 0){
+			player.addItem("Give item", itemId, itemCount, player, true);
 		}
 		return new L2ACPResponse(200, localeService.getString("requests.ok"));
 	}
@@ -62,9 +60,9 @@ public class GiveItemRequest extends L2ACPRequest
 	@Override
 	public void setContent(JsonObject content){
 		super.setContent(content);
-		Username = content.get("Username").getAsString();
-		ItemId = content.get("ItemId").getAsInt();
-		ItemCount = content.get("ItemCount").getAsInt();
-		Enchant = content.get("Enchant").getAsInt();
+		username = content.get("username").getAsString();
+		itemId = content.get("itemId").getAsInt();
+		itemCount = content.get("itemCount").getAsInt();
+		enchant = content.get("enchant").getAsInt();
 	}
 }

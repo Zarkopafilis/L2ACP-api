@@ -20,19 +20,12 @@ import com.elfocrash.l2acp.responses.L2ACPResponse;
 import com.elfocrash.l2acp.util.Helpers;
 import com.google.gson.JsonObject;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 
-import net.sf.l2j.L2DatabaseFactory;
-import net.sf.l2j.gameserver.datatables.ItemTable;
 import net.sf.l2j.gameserver.idfactory.IdFactory;
 import net.sf.l2j.gameserver.model.World;
 import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance;
 import net.sf.l2j.gameserver.model.item.instance.ItemInstance;
-import net.sf.l2j.gameserver.model.item.kind.Item;
 
 /**
  * @author Elfocrash
@@ -40,12 +33,8 @@ import net.sf.l2j.gameserver.model.item.kind.Item;
  */
 public class BuyItemRequest extends L2ACPRequest
 {
-	private String Username;
-	private String AccountName;
-	private int ItemId;
-	private int ItemCount;
-	private int Enchant;
-	private int Price;
+	private String username, accountName;
+	private int itemId, itemCount, enchant, price;
 
 	@Override
 	public L2ACPResponse getResponse()
@@ -53,41 +42,41 @@ public class BuyItemRequest extends L2ACPRequest
 		ArrayList<BuyListItem> items = Helpers.getDonateItemList();
 		boolean valid = false;
 		for(BuyListItem listItem : items){
-			if(listItem.ItemId == ItemId && listItem.ItemCount == ItemCount && listItem.Price == Price && listItem.Enchant == Enchant)
+			if(listItem.ItemId == itemId && listItem.ItemCount == itemCount && listItem.Price == price && listItem.Enchant == enchant)
 				valid = true;
 		}
 		if(!valid){
-			return new L2ACPResponse(500, localeService.getString("requests.buy-sell.error"));//"You tried something cheeky"
+			return new L2ACPResponse(500, localeService.getString("requests.buy-sell.error"));
 		}
 		
-		L2PcInstance player = World.getInstance().getPlayer(Username);
+		L2PcInstance player = World.getInstance().getPlayer(username);
 		if(player == null){
-			player = L2PcInstance.restore(Helpers.getPlayerIdByName(Username));					
+			player = L2PcInstance.restore(Helpers.getPlayerIdByName(username));
 		}
 		
-		if(Helpers.getDonatePoints(AccountName) > Price){
-			if(Enchant > 0){
-				ItemInstance item = new ItemInstance(IdFactory.getInstance().getNextId(), ItemId);
+		if(Helpers.getDonatePoints(accountName) > price){
+			if(enchant > 0){
+				ItemInstance item = new ItemInstance(IdFactory.getInstance().getNextId(), itemId);
 			
-				item.setEnchantLevel(Enchant);
+				item.setEnchantLevel(enchant);
 				player.addItem("Buy item", item, player, true);
-			}else if(ItemCount > 0){
-				player.addItem("Buy item", ItemId, ItemCount, player, true);
+			}else if(itemCount > 0){
+				player.addItem("Buy item", itemId, itemCount, player, true);
 			}
-			Helpers.removeDonatePoints(AccountName, Price);
-			return new L2ACPResponse(200, localeService.getString("requests.success"));//"Success"
+			Helpers.removeDonatePoints(accountName, price);
+			return new L2ACPResponse(200, localeService.getString("requests.success"));
 		}	
-		return new L2ACPResponse(500, localeService.getString("requests.insufficient-donate-points"));//"Not enough donate points"
+		return new L2ACPResponse(500, localeService.getString("requests.insufficient-donate-points"));
 	}
 	
 	@Override
 	public void setContent(JsonObject content){
 		super.setContent(content);
-		AccountName = content.get("AccountName").getAsString();
-		Username = content.get("Username").getAsString();
-		ItemId = content.get("ItemId").getAsInt();
-		ItemCount = content.get("ItemCount").getAsInt();
-		Enchant = content.get("Enchant").getAsInt();
-		Price = content.get("Price").getAsInt();
+		accountName = content.get("accountName").getAsString();
+		username = content.get("username").getAsString();
+		itemId = content.get("itemId").getAsInt();
+		itemCount = content.get("itemCount").getAsInt();
+		enchant = content.get("enchant").getAsInt();
+		price = content.get("price").getAsInt();
 	}
 }

@@ -32,7 +32,7 @@ import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance.StoreType;
  * @author zarkopafilis
  */
 public class GetBuyPrivateStoreItemsRequest extends L2ACPRequest {
-	private List<TradeItemAcp> _items = new ArrayList<>();
+	private List<TradeItemAcp> items = new ArrayList<>();
 	
 	@Override
 	public L2ACPResponse getResponse() {
@@ -40,10 +40,10 @@ public class GetBuyPrivateStoreItemsRequest extends L2ACPRequest {
 		World.getInstance().getPlayers().stream().filter(player -> player.isInStoreMode() && player.getStoreType() == StoreType.BUY).forEach(player -> {
 			player.getSellList().updateItems();
 
-			_items.addAll(player.getBuyList().getItems().stream().map(item -> new TradeItemAcp(item.getObjectId(), item.getItem().getItemId(), item.getEnchant(), item.getCount(), item.getPrice(), player.getName(), player.getObjectId())).collect(Collectors.toList()));
+			items.addAll(player.getBuyList().getItems().stream().map(item -> new TradeItemAcp(item.getObjectId(), item.getItem().getItemId(), item.getEnchant(), item.getCount(), item.getPrice(), player.getName(), player.getObjectId())).collect(Collectors.toList()));
 		});
 		
-		return new GetBuyPrivateStoreItemsResponse(200, localeService.getString("requests.ok"), _items.toArray(new TradeItemAcp[_items.size()]));
+		return new GetBuyPrivateStoreItemsResponse(200, localeService.getString("requests.ok"), items.toArray(new TradeItemAcp[items.size()]));
 	}
 	
 	

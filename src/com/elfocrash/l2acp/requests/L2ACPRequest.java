@@ -27,11 +27,11 @@ public abstract class L2ACPRequest
 {
 	protected LocaleService localeService = LocaleService.getInstance();
 
-	public JsonObject _content;
+	public JsonObject content;
 	
 	public abstract L2ACPResponse getResponse();
 	
 	public void setContent(JsonObject content){
-		_content = content;
+		this.content = content;
 	}
 }

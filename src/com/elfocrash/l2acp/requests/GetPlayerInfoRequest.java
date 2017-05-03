@@ -31,13 +31,13 @@ import net.sf.l2j.gameserver.model.base.ClassId;
  */
 public class GetPlayerInfoRequest extends L2ACPRequest {
 
-	private String Username;
+	private String username;
 	
 	@Override
 	public L2ACPResponse getResponse() {
-		L2PcInstance player = World.getInstance().getPlayer(Username);
+		L2PcInstance player = World.getInstance().getPlayer(username);
 		if(player == null){
-			player = L2PcInstance.restore(Helpers.getPlayerIdByName(Username));					
+			player = L2PcInstance.restore(Helpers.getPlayerIdByName(username));
 		}
 		PlayerInfo playerInfo = new PlayerInfo();
 		playerInfo.Name = player.getName();
@@ -64,6 +64,6 @@ public class GetPlayerInfoRequest extends L2ACPRequest {
 	public void setContent(JsonObject content){
 		super.setContent(content);
 		
-		Username = content.get("Username").getAsString();
+		username = content.get("username").getAsString();
 	}
 }

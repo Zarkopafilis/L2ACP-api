@@ -31,7 +31,7 @@ import net.sf.l2j.gameserver.network.serverpackets.ItemList;
 public class EnchantItemRequest extends L2ACPRequest {
 
 	private String username;
-	private int objectId, enchant;
+	private int objectId;
 
 	@Override
 	public L2ACPResponse getResponse() {
@@ -45,7 +45,7 @@ public class EnchantItemRequest extends L2ACPRequest {
 		item.updateDatabase();
 		player.sendPacket(new ItemList(player, false));
 		player.broadcastUserInfo();
-		return new L2ACPResponse(200, localeService.getString("requests.ok"));//"Success"
+		return new L2ACPResponse(200, localeService.getString("requests.ok"));
 	}
 	
 	
@@ -55,6 +55,5 @@ public class EnchantItemRequest extends L2ACPRequest {
 		
 		username = content.get("username").getAsString();
 		objectId = content.get("objectId").getAsInt();
-		enchant = content.get("enchant").getAsInt();
 	}
 }

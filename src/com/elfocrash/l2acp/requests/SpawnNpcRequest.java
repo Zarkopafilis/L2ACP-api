@@ -27,14 +27,14 @@ import net.sf.l2j.gameserver.geoengine.GeoEngine;
  */
 public class SpawnNpcRequest extends L2ACPRequest {
 
-    private int NpcId, X , Y;
+    private int npcId, x, y;
 
 	@Override
 	public L2ACPResponse getResponse() {
-		int geoX = GeoEngine.getInstance().getGeoX(X);
-		int geoY = GeoEngine.getInstance().getGeoY(Y);
+		int geoX = GeoEngine.getInstance().getGeoX(x);
+		int geoY = GeoEngine.getInstance().getGeoY(y);
 		int z = GeoEngine.getInstance().getHeightNearest(geoX, geoY, 0);
-		Helpers.spawn(NpcId, X, Y, z, 0, false);
+		Helpers.spawn(npcId, x, y, z, 0, false);
 		return new L2ACPResponse(200, localeService.getString("requests.ok"));
 	}
 	
@@ -43,8 +43,8 @@ public class SpawnNpcRequest extends L2ACPRequest {
 	public void setContent(JsonObject content){
 		super.setContent(content);
 		
-		NpcId = content.get("NpcId").getAsInt();
-		X = content.get("X").getAsInt();
-		Y = content.get("Y").getAsInt();
+		npcId = content.get("npcId").getAsInt();
+		x = content.get("x").getAsInt();
+		y = content.get("y").getAsInt();
 	}
 }

@@ -33,7 +33,7 @@ public class GetAnalyticsPlayersRequest extends L2ACPRequest {
 	public L2ACPResponse getResponse() {
 		ArrayList<AnalyticsPlayerData> data = Helpers.getTopAnalyticsPlayersData(100);
 		
-		return new GetAnalyticsPlayersResponse(200, localeService.getString("requests.ok"), data.toArray(new AnalyticsPlayerData[data.size()]));//"Success"
+		return new GetAnalyticsPlayersResponse(200, localeService.getString("requests.ok"), data.toArray(new AnalyticsPlayerData[data.size()]));
 	}
 	
 	

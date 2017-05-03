@@ -31,7 +31,7 @@ import net.sf.l2j.L2DatabaseFactory;
 */
 public class ChangePassRequest extends L2ACPRequest
 {
-	private String Username, CurrentPassword, NewPassword;
+	private String username, currentPassword, newPassword;
 
 	@Override
 	public L2ACPResponse getResponse()
@@ -40,21 +40,21 @@ public class ChangePassRequest extends L2ACPRequest
 		boolean validPass = false;
 		try (Connection con = L2DatabaseFactory.getInstance().getConnection(); PreparedStatement ps = con.prepareStatement(query))
 		{
-			ps.setString(1, Username);
+			ps.setString(1, username);
 			try (ResultSet rset = ps.executeQuery())
 			{
 				if (rset.next())
 				{
 					String pass = rset.getString("password");
 					
-					validPass = pass.equals(CurrentPassword);					
+					validPass = pass.equals(currentPassword);
 				}
 			}
 			
 			if(validPass){
 				try(PreparedStatement ps2 = con.prepareStatement("update accounts set password=? where login=?")){
-					ps2.setString(1, NewPassword);
-					ps2.setString(2, Username);
+					ps2.setString(1, newPassword);
+					ps2.setString(2, username);
 					ps2.executeUpdate();
 					ps2.clearParameters();
 				}
@@ -73,8 +73,8 @@ public class ChangePassRequest extends L2ACPRequest
 	public void setContent(JsonObject content){
 		super.setContent(content);
 		
-		Username = content.get("Username").getAsString();
-		CurrentPassword = content.get("CurrentPassword").getAsString();
-		NewPassword = content.get("NewPassword").getAsString();
+		username = content.get("username").getAsString();
+		currentPassword = content.get("currentPassword").getAsString();
+		newPassword = content.get("newPassword").getAsString();
 	}
 }

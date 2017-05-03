@@ -33,7 +33,7 @@ public class GetBuyListRequest extends L2ACPRequest {
 	public L2ACPResponse getResponse() {
 		ArrayList<BuyListItem> invInfo = Helpers.getDonateItemList();
 		
-		return new GetBuyListResponse(200, localeService.getString("requests.ok"), invInfo.toArray(new BuyListItem[invInfo.size()]));//"Success"
+		return new GetBuyListResponse(200, localeService.getString("requests.ok"), invInfo.toArray(new BuyListItem[invInfo.size()]));
 	}
 	
 	@Override
