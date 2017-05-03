@@ -20,29 +20,26 @@ import com.elfocrash.l2acp.responses.L2ACPResponse;
 import com.google.gson.JsonObject;
 
 import net.sf.l2j.gameserver.Shutdown;
-import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance;
-import net.sf.l2j.gameserver.network.SystemMessageId;
-import net.sf.l2j.gameserver.network.serverpackets.SystemMessage;
-import net.sf.l2j.gameserver.util.Broadcast;
+
 /*
  * @author Elfocrash
  * @author zarkopafilis
  */
 public class RestartServerRequest extends L2ACPRequest {
 
-	private int Seconds;
+	private int seconds;
 	
 	@Override
 	public L2ACPResponse getResponse() {
 		
 		if (L2ACPServer.getInstance().serverShutdown == null || !L2ACPServer.getInstance().serverShutdown.isAlive())
 		{
-			L2ACPServer.getInstance().serverShutdown = new Shutdown(Seconds, true);
+			L2ACPServer.getInstance().serverShutdown = new Shutdown(seconds, true);
 			L2ACPServer.getInstance().serverShutdown.start();
-			return new L2ACPResponse(200, "Server is restarting...");
+			return new L2ACPResponse(200, localeService.getString("requests.restart-server.restarting"));
 		}
 		
-		return new L2ACPResponse(500, "Server is already restarting");
+		return new L2ACPResponse(500, localeService.getString("requests.restart-server.already-restarting"));
 	}
 	
 	
@@ -50,6 +47,6 @@ public class RestartServerRequest extends L2ACPRequest {
 	public void setContent(JsonObject content){
 		super.setContent(content);
 		
-		Seconds = content.get("Seconds").getAsInt();
+		seconds = content.get("seconds").getAsInt();
 	}
 }

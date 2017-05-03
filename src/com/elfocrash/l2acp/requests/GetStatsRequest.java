@@ -21,7 +21,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import com.elfocrash.l2acp.models.InventoryInfo;
 import com.elfocrash.l2acp.models.TopPlayer;
 import com.elfocrash.l2acp.responses.GetStatsResponse;
 import com.elfocrash.l2acp.responses.L2ACPResponse;
@@ -30,8 +29,11 @@ import com.google.gson.JsonObject;
 import net.sf.l2j.L2DatabaseFactory;
 import net.sf.l2j.gameserver.datatables.CharTemplateTable;
 import net.sf.l2j.gameserver.model.actor.template.PcTemplate;
-import net.sf.l2j.gameserver.model.base.ClassId;
 
+/**
+ * @author Elfocrash
+ * @author zarkopafilis
+ */
 public class GetStatsRequest extends L2ACPRequest
 {
 	@Override
@@ -107,14 +109,14 @@ public class GetStatsRequest extends L2ACPRequest
 				}
 			}
 			
-			return new GetStatsResponse(200, "Successful retrieval", topPvp.toArray(new TopPlayer[topPvp.size()])
+			return new GetStatsResponse(200, localeService.getString("requests.ok"), topPvp.toArray(new TopPlayer[topPvp.size()])
 					, topPk.toArray(new TopPlayer[topPk.size()]), topOnline.toArray(new TopPlayer[topOnline.size()]));
 				
 		}
 		catch (SQLException e)
 		{
 			e.printStackTrace();
-			return new L2ACPResponse(500, "Unsuccessful update. Database error.");
+			return new L2ACPResponse(500, localeService.getString("requests.db-error"));
 		}
 	}
 	

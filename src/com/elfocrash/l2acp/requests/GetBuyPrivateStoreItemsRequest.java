@@ -17,36 +17,33 @@ package com.elfocrash.l2acp.requests;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
-import com.elfocrash.l2acp.models.BuyListItem;
 import com.elfocrash.l2acp.models.TradeItemAcp;
 import com.elfocrash.l2acp.responses.GetBuyPrivateStoreItemsResponse;
 import com.elfocrash.l2acp.responses.L2ACPResponse;
 import com.google.gson.JsonObject;
 
 import net.sf.l2j.gameserver.model.World;
-import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance;
 import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance.StoreType;
-import net.sf.l2j.gameserver.model.tradelist.TradeItem;
-import net.sf.l2j.gameserver.util.Broadcast;
 
+/*
+ * @author Elfocrash
+ * @author zarkopafilis
+ */
 public class GetBuyPrivateStoreItemsRequest extends L2ACPRequest {
 	private List<TradeItemAcp> _items = new ArrayList<>();
 	
 	@Override
 	public L2ACPResponse getResponse() {
+
+		World.getInstance().getPlayers().stream().filter(player -> player.isInStoreMode() && player.getStoreType() == StoreType.BUY).forEach(player -> {
+			player.getSellList().updateItems();
+
+			_items.addAll(player.getBuyList().getItems().stream().map(item -> new TradeItemAcp(item.getObjectId(), item.getItem().getItemId(), item.getEnchant(), item.getCount(), item.getPrice(), player.getName(), player.getObjectId())).collect(Collectors.toList()));
+		});
 		
-		for(L2PcInstance player : World.getInstance().getPlayers()){
-			if(player.isInStoreMode() && player.getStoreType() == StoreType.BUY){
-				player.getSellList().updateItems();
-				
-				for(TradeItem item : player.getBuyList().getItems()){
-					_items.add(new TradeItemAcp(item.getObjectId(), item.getItem().getItemId(), item.getEnchant(), item.getCount(), item.getPrice(),player.getName(),player.getObjectId()));
-				}
-			}
-		}
-		
-		return new GetBuyPrivateStoreItemsResponse(200,"Success!", _items.toArray(new TradeItemAcp[_items.size()]));
+		return new GetBuyPrivateStoreItemsResponse(200, localeService.getString("requests.ok"), _items.toArray(new TradeItemAcp[_items.size()]));
 	}
 	
 	

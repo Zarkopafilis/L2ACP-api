@@ -15,33 +15,18 @@
  */
 package com.elfocrash.l2acp.requests;
 
-import com.elfocrash.l2acp.models.BuyListItem;
 import com.elfocrash.l2acp.responses.L2ACPResponse;
 import com.elfocrash.l2acp.util.Helpers;
 import com.google.gson.JsonObject;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
-
-import net.sf.l2j.Config;
-import net.sf.l2j.L2DatabaseFactory;
-import net.sf.l2j.gameserver.datatables.ItemTable;
-import net.sf.l2j.gameserver.idfactory.IdFactory;
 import net.sf.l2j.gameserver.model.ItemRequest;
 import net.sf.l2j.gameserver.model.World;
 import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance;
 import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance.StoreType;
-import net.sf.l2j.gameserver.model.item.instance.ItemInstance;
-import net.sf.l2j.gameserver.model.item.kind.Item;
+
 import net.sf.l2j.gameserver.model.tradelist.TradeItem;
 import net.sf.l2j.gameserver.model.tradelist.TradeList;
-import net.sf.l2j.gameserver.network.SystemMessageId;
-import net.sf.l2j.gameserver.util.Util;
+
 
 /**
  * @author Elfocrash
@@ -49,36 +34,34 @@ import net.sf.l2j.gameserver.util.Util;
  */
 public class SellPrivateStoreItemRequest extends L2ACPRequest
 {
-	private int ObjectId;
-    private int BuyerId;
-    private int Count;
-    private String SellerName;
+	private int objectId, buyerId, count;
+    private String sellerName;
 
 	@Override
 	public L2ACPResponse getResponse()
 	{		
-		L2PcInstance player = World.getInstance().getPlayer(SellerName);
+		L2PcInstance player = World.getInstance().getPlayer(sellerName);
 		if(player == null){
-			player = L2PcInstance.restore(Helpers.getPlayerIdByName(SellerName));					
+			player = L2PcInstance.restore(Helpers.getPlayerIdByName(sellerName));
 		}
 	
-		L2PcInstance buyer = World.getInstance().getPlayer(BuyerId);
+		L2PcInstance buyer = World.getInstance().getPlayer(buyerId);
 		if (buyer == null)
-			return new L2ACPResponse(500, "This player doens't exist");
+			return new L2ACPResponse(500, localeService.getString("requests.buy-sell.no-player"));
 		
 		if(buyer.isInStoreMode() && buyer.getStoreType() == StoreType.BUY){
 			
 			
 			if (player.isCursedWeaponEquipped())
-				return new L2ACPResponse(500, "You can't do that while holding a cursed weapon.");
+				return new L2ACPResponse(500, localeService.getString("requests.buy-sell.cursed-weapon"));
 			
 			TradeList storeList = buyer.getBuyList();
 			if (storeList == null)
-				return new L2ACPResponse(500, "This player is not buying anything");
+				return new L2ACPResponse(500, localeService.getString("requests.buy-sell.not-buying"));
 			
 			if (!player.getAccessLevel().allowTransaction())
 			{
-				return new L2ACPResponse(500, "You are not authorized to do that.");
+				return new L2ACPResponse(500, localeService.getString("requests.unauthorized"));
 			}
 			
 			ItemRequest[] _items = new ItemRequest[1];
@@ -86,13 +69,13 @@ public class SellPrivateStoreItemRequest extends L2ACPRequest
 			int price = 0;
 			
 			for(TradeItem item : storeList.getItems()){
-				if(item.getObjectId() == ObjectId){
+				if(item.getObjectId() == objectId){
 					itemId = item.getItem().getItemId();
 					price = item.getPrice();
 				}
 			}
 			
-			_items[0] = new ItemRequest(ObjectId, itemId, (int) Count, price);
+			_items[0] = new ItemRequest(objectId, itemId, (int) count, price);
 			boolean flag = false;
 			if(!player.isOnline())			{
 				player.setOnlineStatus(true, false);
@@ -101,7 +84,7 @@ public class SellPrivateStoreItemRequest extends L2ACPRequest
 			
 			if (!storeList.privateStoreSell(player, _items))
 			{
-				return new L2ACPResponse(500, "You don't have the items required.");
+				return new L2ACPResponse(500, localeService.getString("requests.buy-sell.insufficient-items"));
 			}
 			if(flag)
 				player.setOnlineStatus(false, false);
@@ -111,20 +94,20 @@ public class SellPrivateStoreItemRequest extends L2ACPRequest
 				buyer.setStoreType(StoreType.NONE);
 				buyer.broadcastUserInfo();
 			}
-			return new L2ACPResponse(200, "Success");
+			return new L2ACPResponse(200, localeService.getString("requests.ok"));
 		
 			
 		}
 		
-		return new L2ACPResponse(500, "Something went wrong");
+		return new L2ACPResponse(500, localeService.getString("requests.error"));
 	}
 	
 	@Override
 	public void setContent(JsonObject content){
 		super.setContent(content);
-		ObjectId = content.get("ObjectId").getAsInt();
-		BuyerId = content.get("BuyerId").getAsInt();
-		Count = content.get("Count").getAsInt();
-		SellerName = content.get("SellerName").getAsString();
+		objectId = content.get("objectId").getAsInt();
+		buyerId = content.get("buyerId").getAsInt();
+		count = content.get("count").getAsInt();
+		sellerName = content.get("sellerName").getAsString();
 	}
 }

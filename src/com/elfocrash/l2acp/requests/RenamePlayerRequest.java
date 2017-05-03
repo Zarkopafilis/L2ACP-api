@@ -33,21 +33,21 @@ import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance;
  */
 public class RenamePlayerRequest extends L2ACPRequest {
 	private int serviceId = 1;
-	private String UserName, NewName;
+	private String userName, newName;
 
 	@Override
 	public L2ACPResponse getResponse() {
 		
-		if(!StringUtil.isValidPlayerName(NewName)){
-			return new L2ACPResponse(500, "Provided name is not valid.");
+		if(!StringUtil.isValidPlayerName(newName)){
+			return new L2ACPResponse(500, localeService.getString("requests.rename-player.invalid-name"));
 		}
 		
-		if(UserName.equals(NewName)){
-			return new L2ACPResponse(500, "That is already your name.");
+		if(userName.equals(newName)){
+			return new L2ACPResponse(500, localeService.getString("requests.rename-player.same-name"));
 		}
 		
-		if(Helpers.getPlayerIdByName(NewName) != 0){
-			return new L2ACPResponse(500, "Than name belongs to someone else.");
+		if(Helpers.getPlayerIdByName(newName) != 0){
+			return new L2ACPResponse(500, localeService.getString("requests.rename-player.used-name"));
 		}
 		
 		ArrayList<DonateService> services = Helpers.getDonateServices();
@@ -58,34 +58,34 @@ public class RenamePlayerRequest extends L2ACPRequest {
 		}		
 		
 		if(price < 0)
-			return new L2ACPResponse(500, "This service is disabled");
+			return new L2ACPResponse(500, localeService.getString("requests.disabled-service"));
 		
-		L2PcInstance player = World.getInstance().getPlayer(UserName);
+		L2PcInstance player = World.getInstance().getPlayer(userName);
 		if(player == null){
-			player = L2PcInstance.restore( Helpers.getPlayerIdByName(UserName));
+			player = L2PcInstance.restore( Helpers.getPlayerIdByName(userName));
 		}
-		String accName = Helpers.getAccountName(UserName);
+		String accName = Helpers.getAccountName(userName);
 		int donatePoints = Helpers.getDonatePoints(accName);
 		
 		if(donatePoints < price){
-			return new L2ACPResponse(500, "Not enough donate points.");
+			return new L2ACPResponse(500, localeService.getString("requests.insufficient-donate-points"));
 		}
 		
 		Helpers.removeDonatePoints(accName, price);
 		
-		player.setName(NewName);
+		player.setName(newName);
 		CharNameTable.getInstance().updatePlayerData(player, false);
 		player.broadcastUserInfo();
 		player.store();
-		return new L2ACPResponse(200, "Successfully renamed");
+		return new L2ACPResponse(200, localeService.getString("requests.ok"));
 	}
 
 	@Override
 	public void setContent(JsonObject content){
 		super.setContent(content);
 		
-		UserName = content.get("UserName").getAsString();
-		NewName = content.get("NewName").getAsString();
+		userName = content.get("userName").getAsString();
+		newName = content.get("newName").getAsString();
 	}
 	
 }

@@ -25,68 +25,70 @@ import com.google.gson.JsonObject;
 
 import net.sf.l2j.L2DatabaseFactory;
 
+/**
+ * @author Elfocrash
+ * @author zarkopafilis
+ */
 public class DonateRequest extends L2ACPRequest {
 
-	private String AccountName;
-	private int	Amount;
-	private String TransactionId;
-	private String VerificationSign;
-	
+	private String accountName, transactionId, verificationSign;
+	private int amount;
+
 	@Override
 	public L2ACPResponse getResponse() {
 
 		try (Connection con = L2DatabaseFactory.getInstance().getConnection();
 				PreparedStatement ps = con.prepareStatement("SELECT count(*) as Count FROM l2acp_donations WHERE accountName=? and transactionid=? and verificationSign=?"))
 		{
-			ps.setString(1, AccountName);
-			ps.setString(2, TransactionId);
-			ps.setString(3, VerificationSign);
+			ps.setString(1, accountName);
+			ps.setString(2, transactionId);
+			ps.setString(3, verificationSign);
 			try (ResultSet rset = ps.executeQuery())
 			{
 				if (rset.next())
 				{
 					int count = rset.getInt("Count");
 					if(count > 0)
-						return new L2ACPResponse(500, "Unsuccessful attempt");
+						return new L2ACPResponse(500, localeService.getString("requests.error"));
 				}
 			}
 		}
 		catch (SQLException e)
 		{
 			e.printStackTrace();
-			return new L2ACPResponse(500, "Unsuccessful attempt");
+			return new L2ACPResponse(500, localeService.getString("requests.error"));
 		}
 		
 		try (Connection con = L2DatabaseFactory.getInstance().getConnection();
 				PreparedStatement ps = con.prepareStatement("insert into l2acp_donations (accountName,amount,transactionid,verificationSign,timestamp) values (?,?,?,?,?)"))
 		{
-			ps.setString(1, AccountName);
-			ps.setInt(2, Amount);
-			ps.setString(3, TransactionId);
-			ps.setString(4, VerificationSign);
+			ps.setString(1, accountName);
+			ps.setInt(2, amount);
+			ps.setString(3, transactionId);
+			ps.setString(4, verificationSign);
 			ps.setLong(5, System.currentTimeMillis());
 			ps.execute();
 		}
 		catch (SQLException e)
 		{
 			e.printStackTrace();
-			return new L2ACPResponse(500, "Unsuccessful attempt");
+			return new L2ACPResponse(500, localeService.getString("requests.error"));
 		}
 		
 		try (Connection con = L2DatabaseFactory.getInstance().getConnection();
 				PreparedStatement ps = con.prepareStatement("update accounts set donatepoints=(donatepoints + ?) WHERE login=?"))
 		{
-			ps.setInt(1, Amount);
-			ps.setString(2, AccountName);
+			ps.setInt(1, amount);
+			ps.setString(2, accountName);
 			ps.execute();
 		}
 		catch (SQLException e)
 		{
 			e.printStackTrace();
-			return new L2ACPResponse(500, "Unsuccessful retrieval");
+			return new L2ACPResponse(500, localeService.getString("requests.error"));
 		}
 
-		return new L2ACPResponse(200,"Success");
+		return new L2ACPResponse(200, localeService.getString("requests.ok"));
 	}
 	
 	
@@ -94,9 +96,9 @@ public class DonateRequest extends L2ACPRequest {
 	public void setContent(JsonObject content){
 		super.setContent(content);
 		
-		AccountName = content.get("AccountName").getAsString();
-		Amount = content.get("Amount").getAsInt();
-		TransactionId = content.get("TransactionId").getAsString();
-		VerificationSign = content.get("VerificationSign").getAsString();
+		accountName = content.get("accountName").getAsString();
+		amount = content.get("amount").getAsInt();
+		transactionId = content.get("transactionId").getAsString();
+		verificationSign = content.get("verificationSign").getAsString();
 	}
 }

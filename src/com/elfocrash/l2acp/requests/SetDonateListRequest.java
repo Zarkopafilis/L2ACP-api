@@ -28,14 +28,14 @@ import com.google.gson.JsonObject;
  */
 public class SetDonateListRequest extends L2ACPRequest {
 	AdminDonateListViewmodel[] list;    
-	private JsonArray Items;
+	private JsonArray items;
 	
 	@Override
 	public L2ACPResponse getResponse() {
 		Helpers.deleteAllDonateItems();
 		Helpers.addDonateItems(list);
 		
-		return new L2ACPResponse(200,"Successfully changed the item list!");
+		return new L2ACPResponse(200, localeService.getString("requests.ok"));
 	}
 	
 	
@@ -43,8 +43,8 @@ public class SetDonateListRequest extends L2ACPRequest {
 	public void setContent(JsonObject content){
 		super.setContent(content);
 		
-		Items = content.get("Items").getAsJsonArray();
+		items = content.get("items").getAsJsonArray();
 		Gson gson = new Gson();
-		list = gson.fromJson(Items, AdminDonateListViewmodel[].class);
+		list = gson.fromJson(items, AdminDonateListViewmodel[].class);
 	}
 }

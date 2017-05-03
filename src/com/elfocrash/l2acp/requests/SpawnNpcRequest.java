@@ -19,12 +19,7 @@ import com.elfocrash.l2acp.responses.L2ACPResponse;
 import com.elfocrash.l2acp.util.Helpers;
 import com.google.gson.JsonObject;
 
-import net.sf.l2j.gameserver.datatables.NpcTable;
 import net.sf.l2j.gameserver.geoengine.GeoEngine;
-import net.sf.l2j.gameserver.geoengine.geodata.ABlock;
-import net.sf.l2j.gameserver.geoengine.geodata.GeoStructure;
-import net.sf.l2j.gameserver.model.actor.template.NpcTemplate;
-import net.sf.l2j.gameserver.util.Broadcast;
 
 /*
  * @author Elfocrash
@@ -40,8 +35,7 @@ public class SpawnNpcRequest extends L2ACPRequest {
 		int geoY = GeoEngine.getInstance().getGeoY(Y);
 		int z = GeoEngine.getInstance().getHeightNearest(geoX, geoY, 0);
 		Helpers.spawn(NpcId, X, Y, z, 0, false);
-		NpcTemplate npc = NpcTable.getInstance().getTemplate(NpcId);
-		return new L2ACPResponse(200,"Successfully spawned " + npc.getName() + "!");
+		return new L2ACPResponse(200, localeService.getString("requests.ok"));
 	}
 	
 	

@@ -18,17 +18,17 @@ package com.elfocrash.l2acp.requests;
 import java.util.ArrayList;
 
 import com.elfocrash.l2acp.models.MapMob;
-import com.elfocrash.l2acp.models.MapPlayer;
-import com.elfocrash.l2acp.responses.GetAllOnlinePlayersForMapResponse;
 import com.elfocrash.l2acp.responses.GetLiveRbsForMapResponse;
 import com.elfocrash.l2acp.responses.L2ACPResponse;
 import com.google.gson.JsonObject;
 
 import net.sf.l2j.gameserver.instancemanager.RaidBossSpawnManager;
-import net.sf.l2j.gameserver.model.World;
-import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance;
 import net.sf.l2j.gameserver.model.actor.instance.L2RaidBossInstance;
 
+/*
+ * @author Elfocrash
+ * @author zarkopafilis
+ */
 public class GetLiveRbsForMapRequest extends L2ACPRequest {
 
 	@Override
@@ -40,7 +40,7 @@ public class GetLiveRbsForMapRequest extends L2ACPRequest {
 			mapMobs.add(mob);
 		}
 		
-		return new GetLiveRbsForMapResponse(200,"Success", mapMobs.toArray(new MapMob[mapMobs.size()]));
+		return new GetLiveRbsForMapResponse(200, localeService.getString("requests.ok"), mapMobs.toArray(new MapMob[mapMobs.size()]));
 	}
 	
 	@Override

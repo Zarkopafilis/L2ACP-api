@@ -22,8 +22,6 @@ import com.google.gson.JsonObject;
 import net.sf.l2j.gameserver.model.World;
 import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance;
 import net.sf.l2j.gameserver.model.base.Experience;
-import net.sf.l2j.gameserver.network.SystemMessageId;
-import net.sf.l2j.gameserver.util.Broadcast;
 
 /*
  * @author Elfocrash
@@ -31,23 +29,23 @@ import net.sf.l2j.gameserver.util.Broadcast;
  */
 public class SetPlayerLevelRequest extends L2ACPRequest {
 
-    private String PlayerName;
-    private int Level;
+    private String playerName;
+    private int level;
     
 	@Override
 	public L2ACPResponse getResponse() {
 		
-		L2PcInstance player = World.getInstance().getPlayer(PlayerName);
+		L2PcInstance player = World.getInstance().getPlayer(playerName);
 		if(player == null)
-			player = L2PcInstance.restore( Helpers.getPlayerIdByName(PlayerName));					
+			player = L2PcInstance.restore( Helpers.getPlayerIdByName(playerName));
 		
 		if(player == null)
-			return new L2ACPResponse(500,"You tried something weird.");
+			return new L2ACPResponse(500,localeService.getString("requests.error"));
 		
 		try
 		{
 
-			byte lvl = Byte.parseByte(String.valueOf(Level));
+			byte lvl = Byte.parseByte(String.valueOf(level));
 			if (lvl >= 1 && lvl <= Experience.MAX_LEVEL)
 			{
 				long pXp = player.getExp();
@@ -63,16 +61,16 @@ public class SetPlayerLevelRequest extends L2ACPRequest {
 			}
 			else
 			{
-				return new L2ACPResponse(500,"You must specify level between 1 and " + Experience.MAX_LEVEL + ".");
+				throw new NumberFormatException();
 			}
 		}
 		catch (NumberFormatException e)
 		{
-			return new L2ACPResponse(500,"You must specify level between 1 and " + Experience.MAX_LEVEL + ".");
+			return new L2ACPResponse(500, localeService.getString("requests.set-level.not-specified").replace("{}", "" + Experience.MAX_LEVEL));
 		}
 		
 		
-		return new L2ACPResponse(200,"Level set successfully given!");
+		return new L2ACPResponse(200, localeService.getString("requests.ok"));
 		
 	}
 	
@@ -81,7 +79,7 @@ public class SetPlayerLevelRequest extends L2ACPRequest {
 	public void setContent(JsonObject content){
 		super.setContent(content);
 		
-		PlayerName = content.get("PlayerName").getAsString();
-		Level = content.get("Level").getAsInt();
+		playerName = content.get("playerName").getAsString();
+		level = content.get("level").getAsInt();
 	}
 }

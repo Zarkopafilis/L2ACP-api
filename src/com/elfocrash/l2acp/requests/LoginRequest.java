@@ -27,48 +27,41 @@ import net.sf.l2j.L2DatabaseFactory;
 
 /**
  * @author Elfocrash
- *
+ * @author zarkopafilis
  */
 public class LoginRequest extends L2ACPRequest
 {
-	private String Username;
-	
-	private String Password;
+	private String username, password;
 
 	@Override
-	public L2ACPResponse getResponse()
-	{
+	public L2ACPResponse getResponse(){
 		String query = "SELECT login, password, access_level, lastServer FROM accounts WHERE login=?";
 		try (Connection con = L2DatabaseFactory.getInstance().getConnection(); PreparedStatement ps = con.prepareStatement(query))
 		{
-			ps.setString(1, Username);
+			ps.setString(1, username);
 			try (ResultSet rset = ps.executeQuery())
 			{
 				if (rset.next())
 				{
 					String pass = rset.getString("password");
 					
-					if(pass.equals(Password))
-						return new L2ACPResponse(200, "Successful login");
+					if(pass.equals(password))
+						return new L2ACPResponse(200, localeService.getString("requests.login.success"));//"Successful login"
 					
 				}
 			}
-		}
-		catch (SQLException e)
-		{
+		}catch (SQLException e){
 			e.printStackTrace();
-			return new L2ACPResponse(500, "Unsuccessful login");
 		}
-		
-		
-		return new L2ACPResponse(500, "Unsuccessful login");
+
+		return new L2ACPResponse(500, localeService.getString("requests.login.error"));//"Unsuccessful login"
 	}
 	
 	@Override
 	public void setContent(JsonObject content){
 		super.setContent(content);
 		
-		Username = content.get("Username").getAsString();
-		Password = content.get("Password").getAsString();
+		username = content.get("username").getAsString();
+		password = content.get("password").getAsString();
 	}
 }

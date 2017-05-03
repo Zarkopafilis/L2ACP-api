@@ -23,8 +23,7 @@ import net.sf.l2j.gameserver.util.Broadcast;
 /*
 * @auther Elfocrash
 * @author zarkopafilis
-* */
-
+*/
 public class AnnounceRequest extends L2ACPRequest {
 
 	private String text;
@@ -32,7 +31,7 @@ public class AnnounceRequest extends L2ACPRequest {
 	@Override
 	public L2ACPResponse getResponse() {
 		Broadcast.announceToOnlinePlayers(text);
-		return new L2ACPResponse(200, localeService.getString("requests.announce.ok-response"));//"Successfully announced!"
+		return new L2ACPResponse(200, localeService.getString("requests.ok"));
 	}
 	
 	

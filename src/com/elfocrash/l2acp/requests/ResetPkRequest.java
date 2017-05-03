@@ -31,7 +31,7 @@ import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance;
  */
 public class ResetPkRequest extends L2ACPRequest {
 	private int serviceId = 3;
-	private String Username;
+	private String username;
 	
 	@Override
 	public L2ACPResponse getResponse() {
@@ -44,21 +44,21 @@ public class ResetPkRequest extends L2ACPRequest {
 		}		
 
 		if(price < 0)
-			return new L2ACPResponse(500, "This service is disabled");
+			return new L2ACPResponse(500, localeService.getString("requests.disabled-service"));
 		
-		L2PcInstance player = World.getInstance().getPlayer(Username);
+		L2PcInstance player = World.getInstance().getPlayer(username);
 		if(player == null){
-			player = L2PcInstance.restore( Helpers.getPlayerIdByName(Username));					
+			player = L2PcInstance.restore( Helpers.getPlayerIdByName(username));
 		}
-		String accName = Helpers.getAccountName(Username);
+		String accName = Helpers.getAccountName(username);
 		int donatePoints = Helpers.getDonatePoints(accName);
 		
 		if(donatePoints < price){
-			return new L2ACPResponse(500, "Not enough donate points.");
+			return new L2ACPResponse(500, localeService.getString("requests.insufficient-donate-points"));
 		}
 		
 		if(player.getPkKills() == 0){
-			return new L2ACPResponse(500, "Your PKs are already zero.");
+			return new L2ACPResponse(500, localeService.getString("requests.reset-pk.already-zero"));
 		}
 		
 		Helpers.removeDonatePoints(accName, price);
@@ -67,13 +67,13 @@ public class ResetPkRequest extends L2ACPRequest {
 		player.broadcastUserInfo();
 		player.store();
 		
-		return new L2ACPResponse(200, "Successfully cleared the PKs");
+		return new L2ACPResponse(200, localeService.getString("requests.ok"));
 	}
 
 	@Override
 	public void setContent(JsonObject content){
 		super.setContent(content);
 		
-		Username = content.get("Username").getAsString();
+		username = content.get("username").getAsString();
 	}
 }

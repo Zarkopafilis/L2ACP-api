@@ -17,10 +17,9 @@ package com.elfocrash.l2acp.requests;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
-import com.elfocrash.l2acp.models.BuyListItem;
 import com.elfocrash.l2acp.models.TradeItemAcp;
-import com.elfocrash.l2acp.responses.GetBuyPrivateStoreItemsResponse;
 import com.elfocrash.l2acp.responses.GetSellPrivateStoreItemsResponse;
 import com.elfocrash.l2acp.responses.L2ACPResponse;
 import com.google.gson.JsonObject;
@@ -28,11 +27,14 @@ import com.google.gson.JsonObject;
 import net.sf.l2j.gameserver.model.World;
 import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance;
 import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance.StoreType;
-import net.sf.l2j.gameserver.model.tradelist.TradeItem;
-import net.sf.l2j.gameserver.util.Broadcast;
 
+/*
+ * @author Elfocrash
+ * @author zarkopafilis
+ */
 public class GetSellPrivateStoreItemsRequest extends L2ACPRequest {
-	private List<TradeItemAcp> _items = new ArrayList<>();
+
+	private List<TradeItemAcp> items = new ArrayList<>();
 	
 	@Override
 	public L2ACPResponse getResponse() {
@@ -41,14 +43,12 @@ public class GetSellPrivateStoreItemsRequest extends L2ACPRequest {
 			if(player.isInStoreMode() && player.getStoreType() == StoreType.SELL){
 				if(player.getSellList().isPackaged())
 					continue;
-				
-				for(TradeItem item : player.getSellList().getItems()){
-					_items.add(new TradeItemAcp(item.getObjectId(), item.getItem().getItemId(), item.getEnchant(), item.getCount(), item.getPrice(),player.getName(),player.getObjectId()));
-				}
+
+				items.addAll(player.getSellList().getItems().stream().map(item -> new TradeItemAcp(item.getObjectId(), item.getItem().getItemId(), item.getEnchant(), item.getCount(), item.getPrice(), player.getName(), player.getObjectId())).collect(Collectors.toList()));
 			}
 		}
 		
-		return new GetSellPrivateStoreItemsResponse(200,"Success!", _items.toArray(new TradeItemAcp[_items.size()]));
+		return new GetSellPrivateStoreItemsResponse(200, localeService.getString("requests.ok") , items.toArray(new TradeItemAcp[items.size()]));
 	}
 	
 	

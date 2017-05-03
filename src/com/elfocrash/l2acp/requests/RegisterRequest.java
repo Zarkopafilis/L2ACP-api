@@ -27,33 +27,31 @@ import net.sf.l2j.L2DatabaseFactory;
 
 /**
  * @author Elfocrash
- *
+ * @author zarkopafilis
  */
 public class RegisterRequest extends L2ACPRequest
 {
-	private String Username;
-	
-	private String Password;
-	
+	private String username, password;
+
 	@Override
 	public L2ACPResponse getResponse()
 	{
 		String query = "SELECT login, password, access_level, lastServer FROM accounts WHERE login=?";
 		try (Connection con = L2DatabaseFactory.getInstance().getConnection(); PreparedStatement ps = con.prepareStatement(query))
 		{
-			ps.setString(1, Username);
+			ps.setString(1, username);
 			try (ResultSet rset = ps.executeQuery())
 			{
 				if (rset.next())
 				{
-						return new L2ACPResponse(500, "Account with username: " + Username + " already exists");					
+						return new L2ACPResponse(500, localeService.getString("requests.register.account-exists").replace("{}", username));
 				}
 			}
 		}
 		catch (SQLException e)
 		{
 			e.printStackTrace();
-			return new L2ACPResponse(500, "Unsuccessful registration");	
+			return new L2ACPResponse(500, localeService.getString("requests.error"));
 		}
 		
 		
@@ -61,17 +59,17 @@ public class RegisterRequest extends L2ACPRequest
 		try (Connection con = L2DatabaseFactory.getInstance().getConnection())
 		{
 			PreparedStatement ps = con.prepareStatement(query2);
-			ps.setString(1, Username);
-			ps.setString(2, Password);
+			ps.setString(1, username);
+			ps.setString(2, password);
 			ps.setLong(3, System.currentTimeMillis());
 			ps.setInt(4, 0);
 			ps.execute();
 			ps.close();
-			return new L2ACPResponse(200, "Successful registration");
+			return new L2ACPResponse(200, localeService.getString("requests.ok"));
 		}
 		catch (Exception e)
 		{
-			return new L2ACPResponse(500, "Unsuccessful registration");			
+			return new L2ACPResponse(500, localeService.getString("requests.ok"));
 		}
 	}
 	
@@ -79,7 +77,7 @@ public class RegisterRequest extends L2ACPRequest
 	public void setContent(JsonObject content){
 		super.setContent(content);
 		
-		Username = content.get("Username").getAsString();
-		Password = content.get("Password").getAsString();
+		username = content.get("username").getAsString();
+		password = content.get("password").getAsString();
 	}
 }

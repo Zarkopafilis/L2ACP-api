@@ -36,7 +36,7 @@ import net.sf.l2j.gameserver.model.item.kind.Item;
 
 /**
  * @author Elfocrash
- *
+ * @author zarkopafilis
  */
 public class BuyItemRequest extends L2ACPRequest
 {
@@ -57,7 +57,7 @@ public class BuyItemRequest extends L2ACPRequest
 				valid = true;
 		}
 		if(!valid){
-			return new L2ACPResponse(500, localeService.getString("requests.buy-item.error"));//"You tried something cheeky"
+			return new L2ACPResponse(500, localeService.getString("requests.buy-sell.error"));//"You tried something cheeky"
 		}
 		
 		L2PcInstance player = World.getInstance().getPlayer(Username);

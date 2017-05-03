@@ -26,16 +26,14 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import net.sf.l2j.L2DatabaseFactory;
-import net.sf.l2j.gameserver.model.CharSelectInfoPackage;
 
 /**
  * @author Elfocrash
- *
+ * @author zarkopafilis
  */
 public class GetAccountInfoRequest extends L2ACPRequest
 {
-	private String Username;
-	
+	private String username;
 	
 	@Override
 	public L2ACPResponse getResponse()
@@ -46,7 +44,7 @@ public class GetAccountInfoRequest extends L2ACPRequest
 		try (Connection con = L2DatabaseFactory.getInstance().getConnection())
 		{
 			PreparedStatement statement = con.prepareStatement("SELECT account_name, obj_Id, char_name, level, maxHp, curHp, maxMp, curMp, face, hairStyle, hairColor, sex, heading, x, y, z, exp, sp, karma, pvpkills, pkkills, clanid, race, classid, deletetime, cancraft, title, accesslevel, online, char_slot, lastAccess, base_class FROM characters WHERE account_name=?");
-			statement.setString(1, Username);
+			statement.setString(1, username);
 			ResultSet charList = statement.executeQuery();
 			
 			while (charList.next())// fills the package
@@ -60,7 +58,7 @@ public class GetAccountInfoRequest extends L2ACPRequest
 		
 			try (PreparedStatement ps = con.prepareStatement("SELECT access_level, donatepoints FROM accounts WHERE login=?"))
 			{
-				ps.setString(1, Username);
+				ps.setString(1, username);
 				try (ResultSet rset = ps.executeQuery())
 				{
 					if (rset.next())
@@ -73,16 +71,16 @@ public class GetAccountInfoRequest extends L2ACPRequest
 			catch (SQLException e)
 			{
 				e.printStackTrace();
-				return new L2ACPResponse(500, "Unsuccessful retrieval");
+				return new L2ACPResponse(500, localeService.getString("requests.account-info.error"));//"Unsuccessful retrieval"
 			}
 			
-			return new GetAccountInfoResponse(200,"Success", chars.toArray(new String[chars.size()]), donatePoints, accessLevel);
+			return new GetAccountInfoResponse(200,"Success", chars.toArray(new String[chars.size()]), donatePoints, accessLevel);//"Successful retrieval"
 		}
 		catch (SQLException e)
 		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			return new L2ACPResponse(500, "Unsuccessful retrieval");
+			return new L2ACPResponse(500, localeService.getString("requests.account-info.success"));//"Unsuccessful retrieval"
 		}
 	}
 	
@@ -90,6 +88,6 @@ public class GetAccountInfoRequest extends L2ACPRequest
 	public void setContent(JsonObject content){
 		super.setContent(content);
 		
-		Username = content.get("Username").getAsString();
+		username = content.get("username").getAsString();
 	}
 }

@@ -58,14 +58,14 @@ public class ChangePassRequest extends L2ACPRequest
 					ps2.executeUpdate();
 					ps2.clearParameters();
 				}
-				return new L2ACPResponse(200, "Successful update");
+				return new L2ACPResponse(200, localeService.getString("requests.ok"));
 			}
-			return new L2ACPResponse(500, "Unsuccessful update. Invalid password.");			
+			return new L2ACPResponse(500, localeService.getString("requests.error"));
 		}
 		catch (SQLException e)
 		{
 			e.printStackTrace();
-			return new L2ACPResponse(500, "Unsuccessful update. Database error.");
+			return new L2ACPResponse(500, localeService.getString("requests.db-error"));
 		}
 	}
 	

@@ -26,6 +26,10 @@ import net.sf.l2j.gameserver.model.World;
 import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance;
 import net.sf.l2j.gameserver.model.base.Sex;
 
+/**
+ * @author Elfocrash
+ * @author zarkopafilis
+ */
 public class ChangeSexRequest extends L2ACPRequest {
 	private int serviceId = 4;
 	private String Username;
@@ -41,7 +45,7 @@ public class ChangeSexRequest extends L2ACPRequest {
 		}		
 
 		if(price < 0)
-			return new L2ACPResponse(500, "This service is disabled");
+			return new L2ACPResponse(500, localeService.getString("requests.disabled-service"));
 		
 		L2PcInstance player = World.getInstance().getPlayer(Username);
 		if(player == null){
@@ -51,7 +55,7 @@ public class ChangeSexRequest extends L2ACPRequest {
 		int donatePoints = Helpers.getDonatePoints(accName);
 		
 		if(donatePoints < price){
-			return new L2ACPResponse(500, "Not enough donate points.");
+			return new L2ACPResponse(500, localeService.getString("requests.insufficient-donate-points"));
 		}
 		
 		Helpers.removeDonatePoints(accName, price);
@@ -65,7 +69,7 @@ public class ChangeSexRequest extends L2ACPRequest {
 		player.broadcastUserInfo();
 		player.store();
 		
-		return new L2ACPResponse(200, "Successfully changed the sex");
+		return new L2ACPResponse(200, localeService.getString("requests.ok"));
 	}
 
 	@Override

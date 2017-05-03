@@ -28,7 +28,7 @@ import com.google.gson.JsonObject;
 
 /**
  * @author Elfocrash
- *
+ * @author zarkopafilis
  */
 public class LuckyWheelListRequest extends L2ACPRequest
 {
@@ -36,7 +36,7 @@ public class LuckyWheelListRequest extends L2ACPRequest
 	public L2ACPResponse getResponse()
 	{
 		ArrayList<LuckyWheelItem> itemList = Helpers.getLuckyWheelList();
-		return new LuckyWheelListResponse(200, "Success", itemList.toArray(new LuckyWheelItem[itemList.size()]));
+		return new LuckyWheelListResponse(200, localeService.getString("requests.ok"), itemList.toArray(new LuckyWheelItem[itemList.size()]));
 	}
 	
 	@Override

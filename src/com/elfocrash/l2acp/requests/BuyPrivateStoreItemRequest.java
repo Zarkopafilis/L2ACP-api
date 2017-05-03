@@ -51,17 +51,17 @@ public class BuyPrivateStoreItemRequest extends L2ACPRequest
 	
 		L2PcInstance seller = World.getInstance().getPlayer(SellerId);
 		if (seller == null)
-			return new L2ACPResponse(500, localeService.getString("requests.buy-private-store-item.no-player"));//"This player doens't exist"
+			return new L2ACPResponse(500, localeService.getString("requests.buy-sell.no-player"));//"This player doens't exist"
 		
 		if(seller.isInStoreMode() && seller.getStoreType() == StoreType.SELL){
 
 			if (player.isCursedWeaponEquipped())
-				return new L2ACPResponse(500, localeService.getString("requests.buy-private-store-item.cursed-weapon"));//"You can't do that while holding a cursed weapon."
+				return new L2ACPResponse(500, localeService.getString("requests.buy-sell.cursed-weapon"));//"You can't do that while holding a cursed weapon."
 			
 					
 			TradeList storeList = seller.getSellList();
 			if (storeList == null)
-				return new L2ACPResponse(500, localeService.getString("requests.buy-private-store-item.not-buying"));//"This player is not buying anything"
+				return new L2ACPResponse(500, localeService.getString("requests.buy-sell.not-buying"));//"This player is not buying anything"
 			
 			if (!player.getAccessLevel().allowTransaction())
 			{
@@ -87,7 +87,7 @@ public class BuyPrivateStoreItemRequest extends L2ACPRequest
 		
 			int result = storeList.privateStoreBuy(player, _items);
 			if(result > 0)
-				return new L2ACPResponse(500, localeService.getString("requests.buy-private-store-item.insufficient-items"));//"You don't have the items required"
+				return new L2ACPResponse(500, localeService.getString("requests.buy-sell.insufficient-items"));//"You don't have the items required"
 			
 			if(flag)
 				player.setOnlineStatus(false, false);

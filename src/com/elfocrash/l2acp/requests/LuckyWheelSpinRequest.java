@@ -31,17 +31,16 @@ import net.sf.l2j.gameserver.model.item.instance.ItemInstance;
 
 /**
  * @author Elfocrash
- *
+ * @author zarkopafilis
  */
 public class LuckyWheelSpinRequest extends L2ACPRequest
 {
-	private String PlayerName;
+	private String playerName;
+	private final int spinCost = 5;
 
 	@Override
 	public L2ACPResponse getResponse()
 	{
-		int spinCost = 5;
-		
 		ArrayList<LuckyWheelItem> itemList = Helpers.getLuckyWheelList();
 		RandomCollection<LuckyWheelItem> chanceList = new RandomCollection<>();
 		for(LuckyWheelItem item : itemList){
@@ -49,11 +48,11 @@ public class LuckyWheelSpinRequest extends L2ACPRequest
 		}
 		
 		LuckyWheelItem winItem = chanceList.next();
-		String accountName = Helpers.getAccountName(PlayerName);
+		String accountName = Helpers.getAccountName(playerName);
 		
-		L2PcInstance player = World.getInstance().getPlayer(PlayerName);
+		L2PcInstance player = World.getInstance().getPlayer(playerName);
 		if(player == null){
-			player = L2PcInstance.restore(Helpers.getPlayerIdByName(PlayerName));					
+			player = L2PcInstance.restore(Helpers.getPlayerIdByName(playerName));
 		}
 		
 		if(Helpers.getDonatePoints(accountName) > spinCost){
@@ -66,16 +65,15 @@ public class LuckyWheelSpinRequest extends L2ACPRequest
 				player.addItem("Buy item", winItem.ItemId, winItem.Count, player, true);
 			}
 			Helpers.removeDonatePoints(accountName, spinCost);
-			return new LuckyWheelSpinResponse(200, "You won!", winItem);
-		}else{
-			return new L2ACPResponse(500, "Not enough donate points");
-		}		
-		//return new L2ACPResponse(500, "Not enough donate points");
+			return new LuckyWheelSpinResponse(200, localeService.getString("requests.lucky-wheel.win"), winItem);//"You won!"
+		}
+
+		return new L2ACPResponse(500, localeService.getString("requests.insufficient-donate-points"));//"Not enough donate points"
 	}
 	
 	@Override
 	public void setContent(JsonObject content){
 		super.setContent(content);
-		PlayerName = content.get("PlayerName").getAsString();
+		playerName = content.get("playerName").getAsString();
 	}
 }

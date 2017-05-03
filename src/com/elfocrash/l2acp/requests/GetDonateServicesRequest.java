@@ -23,13 +23,17 @@ import com.elfocrash.l2acp.responses.L2ACPResponse;
 import com.elfocrash.l2acp.util.Helpers;
 import com.google.gson.JsonObject;
 
+/*
+ * @author Elfocrash
+ * @author zarkopafilis
+ */
 public class GetDonateServicesRequest extends L2ACPRequest {
 
 	@Override
 	public L2ACPResponse getResponse() {
 		ArrayList<DonateService> invInfo = Helpers.getDonateServices();
 		
-		return new GetDonateServicesResponse(200,"Success", invInfo.toArray(new DonateService[invInfo.size()]));
+		return new GetDonateServicesResponse(200, localeService.getString("requests.ok"), invInfo.toArray(new DonateService[invInfo.size()]));
 	}
 
 	@Override

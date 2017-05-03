@@ -19,8 +19,10 @@ import com.elfocrash.l2acp.responses.L2ACPResponse;
 import com.elfocrash.l2acp.util.Helpers;
 import com.google.gson.JsonObject;
 
-import net.sf.l2j.gameserver.util.Broadcast;
-
+/*
+ * @author Elfocrash
+ * @author zarkopafilis
+ */
 public class GiveDonatePointsRequest extends L2ACPRequest {
 
     private String PlayerName;
@@ -33,9 +35,9 @@ public class GiveDonatePointsRequest extends L2ACPRequest {
 		if(accountName != null && accountName.length() > 0){
 			Helpers.addDonatePoints(accountName, Points);
 			
-			return new L2ACPResponse(200,"Donate points given!");
+			return new L2ACPResponse(200, localeService.getString("requests.ok"));
 		}
-		return new L2ACPResponse(500,"You tried something weird.");
+		return new L2ACPResponse(500, localeService.getString("requests.error"));
 	}
 	
 	

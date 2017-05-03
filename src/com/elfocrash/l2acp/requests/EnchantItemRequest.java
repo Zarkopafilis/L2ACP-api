@@ -15,8 +15,6 @@
  */
 package com.elfocrash.l2acp.requests;
 
-import com.elfocrash.l2acp.models.PlayerInfo;
-import com.elfocrash.l2acp.responses.GetPlayerInfoResponse;
 import com.elfocrash.l2acp.responses.L2ACPResponse;
 import com.elfocrash.l2acp.util.Helpers;
 import com.google.gson.JsonObject;
@@ -24,28 +22,30 @@ import com.google.gson.JsonObject;
 import net.sf.l2j.gameserver.model.World;
 import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance;
 import net.sf.l2j.gameserver.model.item.instance.ItemInstance;
-import net.sf.l2j.gameserver.model.item.kind.Item;
 import net.sf.l2j.gameserver.network.serverpackets.ItemList;
 
+/**
+ * @author Elfocrash
+ * @author zarkopafilis
+ */
 public class EnchantItemRequest extends L2ACPRequest {
 
-	private String Username;
-	private int	ObjectId;
-	private int Enchant;
-	
+	private String username;
+	private int objectId, enchant;
+
 	@Override
 	public L2ACPResponse getResponse() {
-		L2PcInstance player = World.getInstance().getPlayer(Username);
+		L2PcInstance player = World.getInstance().getPlayer(username);
 		if(player == null){
-			player = L2PcInstance.restore(new Helpers().getPlayerIdByName(Username));					
+			player = L2PcInstance.restore(new Helpers().getPlayerIdByName(username));
 		}
 		
-		ItemInstance item = player.getInventory().getItemByObjectId(ObjectId);
+		ItemInstance item = player.getInventory().getItemByObjectId(objectId);
 		item.setEnchantLevel(item.getEnchantLevel() + 1);
 		item.updateDatabase();
 		player.sendPacket(new ItemList(player, false));
 		player.broadcastUserInfo();
-		return new L2ACPResponse(200,"Success");
+		return new L2ACPResponse(200, localeService.getString("requests.ok"));//"Success"
 	}
 	
 	
@@ -53,8 +53,8 @@ public class EnchantItemRequest extends L2ACPRequest {
 	public void setContent(JsonObject content){
 		super.setContent(content);
 		
-		Username = content.get("Username").getAsString();
-		ObjectId = content.get("ObjectId").getAsInt();
-		Enchant = content.get("Enchant").getAsInt();
+		username = content.get("username").getAsString();
+		objectId = content.get("objectId").getAsInt();
+		enchant = content.get("enchant").getAsInt();
 	}
 }

@@ -15,28 +15,18 @@
  */
 package com.elfocrash.l2acp.requests;
 
-import com.elfocrash.l2acp.models.BuyListItem;
 import com.elfocrash.l2acp.responses.L2ACPResponse;
 import com.elfocrash.l2acp.util.Helpers;
 import com.google.gson.JsonObject;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-
-import net.sf.l2j.L2DatabaseFactory;
-import net.sf.l2j.gameserver.datatables.ItemTable;
 import net.sf.l2j.gameserver.idfactory.IdFactory;
 import net.sf.l2j.gameserver.model.World;
 import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance;
 import net.sf.l2j.gameserver.model.item.instance.ItemInstance;
-import net.sf.l2j.gameserver.model.item.kind.Item;
 
 /**
  * @author Elfocrash
- *
+ * @author zarkopafilis
  */
 public class GiveItemRequest extends L2ACPRequest
 {
@@ -55,7 +45,7 @@ public class GiveItemRequest extends L2ACPRequest
 		}
 		
 		if(Enchant > 0 && ItemCount > 1){
-			return new L2ACPResponse(500, "Error");
+			return new L2ACPResponse(500, localeService.getString("requests.error"));
 		}
 		
 		if(Enchant > 0){
@@ -66,7 +56,7 @@ public class GiveItemRequest extends L2ACPRequest
 		}else if(ItemCount > 0){
 			player.addItem("Give item", ItemId, ItemCount, player, true);
 		}
-		return new L2ACPResponse(200, "Success");
+		return new L2ACPResponse(200, localeService.getString("requests.ok"));
 	}
 	
 	@Override
