@@ -15,8 +15,6 @@
  */
 package com.elfocrash.l2acp.requests;
 
-import java.util.ArrayList;
-
 import com.elfocrash.l2acp.models.AdminDonateListViewmodel;
 import com.elfocrash.l2acp.responses.L2ACPResponse;
 import com.elfocrash.l2acp.util.Helpers;
@@ -24,8 +22,10 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
-import net.sf.l2j.gameserver.util.Broadcast;
-
+/*
+ * @author Elfocrash
+ * @author zarkopafilis
+ */
 public class SetDonateListRequest extends L2ACPRequest {
 	AdminDonateListViewmodel[] list;    
 	private JsonArray Items;

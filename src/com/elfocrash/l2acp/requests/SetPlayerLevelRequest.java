@@ -25,6 +25,10 @@ import net.sf.l2j.gameserver.model.base.Experience;
 import net.sf.l2j.gameserver.network.SystemMessageId;
 import net.sf.l2j.gameserver.util.Broadcast;
 
+/*
+ * @author Elfocrash
+ * @author zarkopafilis
+ */
 public class SetPlayerLevelRequest extends L2ACPRequest {
 
     private String PlayerName;

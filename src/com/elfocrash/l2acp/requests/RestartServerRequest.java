@@ -24,7 +24,10 @@ import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance;
 import net.sf.l2j.gameserver.network.SystemMessageId;
 import net.sf.l2j.gameserver.network.serverpackets.SystemMessage;
 import net.sf.l2j.gameserver.util.Broadcast;
-
+/*
+ * @author Elfocrash
+ * @author zarkopafilis
+ */
 public class RestartServerRequest extends L2ACPRequest {
 
 	private int Seconds;

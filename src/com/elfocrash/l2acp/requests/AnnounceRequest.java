@@ -20,23 +20,25 @@ import com.google.gson.JsonObject;
 
 import net.sf.l2j.gameserver.util.Broadcast;
 
+/*
+* @auther Elfocrash
+* @author zarkopafilis
+* */
+
 public class AnnounceRequest extends L2ACPRequest {
 
-	private String Text;
-	
+	private String text;
+
 	@Override
 	public L2ACPResponse getResponse() {
-		
-		Broadcast.announceToOnlinePlayers(Text);
-		
-		return new L2ACPResponse(200,"Successfully announced!");
+		Broadcast.announceToOnlinePlayers(text);
+		return new L2ACPResponse(200, localeService.getString("requests.announce.ok-response"));//"Successfully announced!"
 	}
 	
 	
 	@Override
 	public void setContent(JsonObject content){
 		super.setContent(content);
-		
-		Text = content.get("Text").getAsString();
+		text = content.get("text").getAsString();
 	}
 }

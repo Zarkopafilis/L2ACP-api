@@ -25,6 +25,10 @@ import com.google.gson.JsonObject;
 import net.sf.l2j.gameserver.model.World;
 import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance;
 
+/*
+ * @author Elfocrash
+ * @author zarkopafilis
+ */
 public class SetNoblessRequest extends L2ACPRequest {
 	private int serviceId = 2;
 	private String Username;

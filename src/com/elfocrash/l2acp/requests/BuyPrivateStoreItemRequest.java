@@ -15,37 +15,24 @@
  */
 package com.elfocrash.l2acp.requests;
 
-import com.elfocrash.l2acp.models.BuyListItem;
 import com.elfocrash.l2acp.responses.L2ACPResponse;
 import com.elfocrash.l2acp.util.Helpers;
 import com.google.gson.JsonObject;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
-import net.sf.l2j.Config;
-import net.sf.l2j.L2DatabaseFactory;
-import net.sf.l2j.gameserver.datatables.ItemTable;
-import net.sf.l2j.gameserver.idfactory.IdFactory;
 import net.sf.l2j.gameserver.model.ItemRequest;
 import net.sf.l2j.gameserver.model.World;
 import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance;
 import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance.StoreType;
-import net.sf.l2j.gameserver.model.item.instance.ItemInstance;
-import net.sf.l2j.gameserver.model.item.kind.Item;
 import net.sf.l2j.gameserver.model.tradelist.TradeItem;
 import net.sf.l2j.gameserver.model.tradelist.TradeList;
-import net.sf.l2j.gameserver.network.SystemMessageId;
-import net.sf.l2j.gameserver.util.Util;
+
 
 /**
  * @author Elfocrash
- *
+ * @author zarkopafilis
  */
 public class BuyPrivateStoreItemRequest extends L2ACPRequest
 {
@@ -64,22 +51,21 @@ public class BuyPrivateStoreItemRequest extends L2ACPRequest
 	
 		L2PcInstance seller = World.getInstance().getPlayer(SellerId);
 		if (seller == null)
-			return new L2ACPResponse(500, "This player doens't exist");
+			return new L2ACPResponse(500, localeService.getString("requests.buy-private-store-item.no-player"));//"This player doens't exist"
 		
 		if(seller.isInStoreMode() && seller.getStoreType() == StoreType.SELL){
-			
-			
+
 			if (player.isCursedWeaponEquipped())
-				return new L2ACPResponse(500, "You can't do that while holding a cursed weapon.");
+				return new L2ACPResponse(500, localeService.getString("requests.buy-private-store-item.cursed-weapon"));//"You can't do that while holding a cursed weapon."
 			
 					
 			TradeList storeList = seller.getSellList();
 			if (storeList == null)
-				return new L2ACPResponse(500, "This player is not buying anything");
+				return new L2ACPResponse(500, localeService.getString("requests.buy-private-store-item.not-buying"));//"This player is not buying anything"
 			
 			if (!player.getAccessLevel().allowTransaction())
 			{
-				return new L2ACPResponse(500, "You are not authorized to do that.");
+				return new L2ACPResponse(500, localeService.getString("requests.unauthorized"));//"You are not authorized to do that"
 			}
 			
 			Set<ItemRequest> _items = new HashSet<>();
@@ -101,7 +87,7 @@ public class BuyPrivateStoreItemRequest extends L2ACPRequest
 		
 			int result = storeList.privateStoreBuy(player, _items);
 			if(result > 0)
-				return new L2ACPResponse(500, "You don't have the items required.");
+				return new L2ACPResponse(500, localeService.getString("requests.buy-private-store-item.insufficient-items"));//"You don't have the items required"
 			
 			if(flag)
 				player.setOnlineStatus(false, false);
@@ -111,12 +97,12 @@ public class BuyPrivateStoreItemRequest extends L2ACPRequest
 				seller.setStoreType(StoreType.NONE);
 				seller.broadcastUserInfo();
 			}
-			return new L2ACPResponse(200, "Success");
+			return new L2ACPResponse(200, localeService.getString("requests.success"));//"Success"
 		
 			
 		}
 		
-		return new L2ACPResponse(500, "Something went wrong");
+		return new L2ACPResponse(500, localeService.getString("requests.error"));//"Something went wrong"
 	}
 	
 	@Override

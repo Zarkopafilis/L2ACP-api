@@ -15,15 +15,18 @@
  */
 package com.elfocrash.l2acp.requests;
 
+import com.elfocrash.l2acp.localization.LocaleService;
 import com.elfocrash.l2acp.responses.L2ACPResponse;
 import com.google.gson.JsonObject;
 
 /**
  * @author Elfocrash
- *
+ * @author zarkopafilis
  */
 public abstract class L2ACPRequest
 {
+	protected LocaleService localeService = LocaleService.getInstance();
+
 	public JsonObject _content;
 	
 	public abstract L2ACPResponse getResponse();

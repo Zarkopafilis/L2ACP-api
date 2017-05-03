@@ -45,7 +45,7 @@ import net.sf.l2j.gameserver.util.Util;
 
 /**
  * @author Elfocrash
- *
+ * @author zarkopafilis
  */
 public class SellPrivateStoreItemRequest extends L2ACPRequest
 {

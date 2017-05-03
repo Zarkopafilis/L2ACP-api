@@ -27,11 +27,14 @@ import net.sf.l2j.gameserver.datatables.CharNameTable;
 import net.sf.l2j.gameserver.model.World;
 import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance;
 
+/*
+ * @author Elfocrash
+ * @author zarkopafilis
+ */
 public class RenamePlayerRequest extends L2ACPRequest {
 	private int serviceId = 1;
-	private String Username;
-	private String NewName;
-	
+	private String UserName, NewName;
+
 	@Override
 	public L2ACPResponse getResponse() {
 		
@@ -39,7 +42,7 @@ public class RenamePlayerRequest extends L2ACPRequest {
 			return new L2ACPResponse(500, "Provided name is not valid.");
 		}
 		
-		if(Username.equals(NewName)){
+		if(UserName.equals(NewName)){
 			return new L2ACPResponse(500, "That is already your name.");
 		}
 		
@@ -57,11 +60,11 @@ public class RenamePlayerRequest extends L2ACPRequest {
 		if(price < 0)
 			return new L2ACPResponse(500, "This service is disabled");
 		
-		L2PcInstance player = World.getInstance().getPlayer(Username);
+		L2PcInstance player = World.getInstance().getPlayer(UserName);
 		if(player == null){
-			player = L2PcInstance.restore( Helpers.getPlayerIdByName(Username));					
+			player = L2PcInstance.restore( Helpers.getPlayerIdByName(UserName));
 		}
-		String accName = Helpers.getAccountName(Username);
+		String accName = Helpers.getAccountName(UserName);
 		int donatePoints = Helpers.getDonatePoints(accName);
 		
 		if(donatePoints < price){
@@ -81,7 +84,7 @@ public class RenamePlayerRequest extends L2ACPRequest {
 	public void setContent(JsonObject content){
 		super.setContent(content);
 		
-		Username = content.get("Username").getAsString();
+		UserName = content.get("UserName").getAsString();
 		NewName = content.get("NewName").getAsString();
 	}
 	

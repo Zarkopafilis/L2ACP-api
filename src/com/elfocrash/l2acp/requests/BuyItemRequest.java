@@ -57,7 +57,7 @@ public class BuyItemRequest extends L2ACPRequest
 				valid = true;
 		}
 		if(!valid){
-			return new L2ACPResponse(500, "You tried something cheeky");
+			return new L2ACPResponse(500, localeService.getString("requests.buy-item.error"));//"You tried something cheeky"
 		}
 		
 		L2PcInstance player = World.getInstance().getPlayer(Username);
@@ -75,9 +75,9 @@ public class BuyItemRequest extends L2ACPRequest
 				player.addItem("Buy item", ItemId, ItemCount, player, true);
 			}
 			Helpers.removeDonatePoints(AccountName, Price);
-			return new L2ACPResponse(200, "Success");
+			return new L2ACPResponse(200, localeService.getString("requests.success"));//"Success"
 		}	
-		return new L2ACPResponse(500, "Not enough donate points");
+		return new L2ACPResponse(500, localeService.getString("requests.insufficient-donate-points"));//"Not enough donate points"
 	}
 	
 	@Override

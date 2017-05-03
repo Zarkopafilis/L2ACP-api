@@ -26,12 +26,14 @@ import net.sf.l2j.gameserver.geoengine.geodata.GeoStructure;
 import net.sf.l2j.gameserver.model.actor.template.NpcTemplate;
 import net.sf.l2j.gameserver.util.Broadcast;
 
+/*
+ * @author Elfocrash
+ * @author zarkopafilis
+ */
 public class SpawnNpcRequest extends L2ACPRequest {
 
-    private int NpcId;
-    private int X;
-    private int Y;
-	
+    private int NpcId, X , Y;
+
 	@Override
 	public L2ACPResponse getResponse() {
 		int geoX = GeoEngine.getInstance().getGeoX(X);

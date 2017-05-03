@@ -25,13 +25,13 @@ import com.google.gson.JsonObject;
 
 import net.sf.l2j.L2DatabaseFactory;
 
+/*
+* @author Elfocrash
+* @author zarkopafilis
+*/
 public class ChangePassRequest extends L2ACPRequest
 {
-	private String Username;
-	
-	private String CurrentPassword;
-	
-	private String NewPassword;
+	private String Username, CurrentPassword, NewPassword;
 
 	@Override
 	public L2ACPResponse getResponse()

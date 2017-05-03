@@ -24,6 +24,10 @@ import net.sf.l2j.gameserver.model.World;
 import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance;
 import net.sf.l2j.gameserver.util.Broadcast;
 
+/*
+ * @author Elfocrash
+ * @author zarkopafilis
+ */
 public class PunishRequest extends L2ACPRequest {
 
 	private int PunishId;
@@ -46,31 +50,31 @@ public class PunishRequest extends L2ACPRequest {
 					LoginServerThread.getInstance().sendAccessLevel(PlayerName, -100);
 				}
 					
-				return new L2ACPResponse(200,"Successfully account banned.");
+				return new L2ACPResponse(200, localeService.getString("requests.punish.account-ban"));//"Account successfully banned"
 			case 2: // ban char
 					player.setPunishLevel(L2PcInstance.PunishLevel.CHAR, Time);
-				return new L2ACPResponse(200,"Successfully banned");
+				return new L2ACPResponse(200, localeService.getString("requests.punish.char-ban"));//"Successfully banned"
 			case 3: // ban chat
 					player.setPunishLevel(L2PcInstance.PunishLevel.CHAT, Time);
-				return new L2ACPResponse(200,"Successfully chat banned.");
+				return new L2ACPResponse(200, localeService.getString("requests.punish.chat-ban"));//"Successfully chat banned"
 			case 4: // ban jail
 					player.setPunishLevel(L2PcInstance.PunishLevel.JAIL, Time);
-				return new L2ACPResponse(200,"Successfully jailed.");
+				return new L2ACPResponse(200,localeService.getString("requests.punish.jail"));//"Successfully jailed"
 			case 5: // unban account
 					LoginServerThread.getInstance().sendAccessLevel(Helpers.getAccountName(player.getName()), 0);
-				return new L2ACPResponse(200,"Account unbanned.");
+				return new L2ACPResponse(200, localeService.getString("requests.punish.account-unban"));//"Account unbanned"
 			case 6: // unban char
 				Helpers.changeCharAccessLevel(null, PlayerName, 0);
-				return new L2ACPResponse(200,"Character unbanned.");
+				return new L2ACPResponse(200, localeService.getString("requests.punish.char-unban"));//"Character unbanned"
 			case 7: // unban chat
 				try{
 					if (player.isChatBanned())
 					{
 						player.setPunishLevel(L2PcInstance.PunishLevel.NONE, 0);
-						return new L2ACPResponse(200,"Chat ban has been lifted.");
+						return new L2ACPResponse(200, localeService.getString("requests.punish.chat-unban"));//"Chat ban has been lifted"
 					}
 					else
-						return new L2ACPResponse(500,"User isn't currently chat banned.");
+						return new L2ACPResponse(500,localeService.getString("requests.punish.chat-unban-no-ban"));//"User isn't currently chat banned"
 				}catch(Exception e){
 					Helpers.banChatOfflinePlayer(PlayerName, 0, false);
 				}
@@ -78,18 +82,18 @@ public class PunishRequest extends L2ACPRequest {
 				//break;
 			case 8:
 				player.setPunishLevel(L2PcInstance.PunishLevel.NONE, 0);
-				return new L2ACPResponse(200, "Character unjailed.");
+				return new L2ACPResponse(200, localeService.getString("requests.punish.unjail"));//"Character unjailed"
 			case 9:
 				if(player.isOnline())
 				{
 					player.logout();
-					return new L2ACPResponse(200, "Character kicked.");
+					return new L2ACPResponse(200, localeService.getString("requests.punish.kick"));//"Character kicked"
 				}
-				return new L2ACPResponse(5000, "Character wasn't online.");
+				return new L2ACPResponse(5000, localeService.getString("requests.punish.player-offline"));//"Character wasn't online"
 				
 		}
 		
-		return new L2ACPResponse(200,"ok:Success");
+		return new L2ACPResponse(200,localeService.getString("requests.ok"));
 	}
 	
 	
